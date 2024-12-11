@@ -11,10 +11,10 @@ function App() {
 
   // State for form data
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    age: "",
-    email: "",
+    algorithmName: "",
+    priority: true,
+    quantum: 0,
+    tasks: []
   });
 
   // Function to go to the next step
@@ -43,8 +43,6 @@ function App() {
               {step === 1 && (
                 <StepOne
                   nextStep={nextStep}
-                  handleFormData={handleInputData}
-                  values={formData}
                 />
               )}
 

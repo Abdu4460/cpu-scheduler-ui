@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, TextField, Button, Box, Typography } from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Card, Button, Box, Typography } from "@mui/material";
 import * as Yup from "yup";
+import { List, ListItem } from "@mui/material";
 
 // Form validation schema using Yup
 const validationSchema = Yup.object({
@@ -9,58 +9,54 @@ const validationSchema = Yup.object({
   lastName: Yup.string().required("This is a required field"),
 });
 
-const StepOne = ({ nextStep, values, handleFormData }) => {
-  // Function to handle form submission
-  const onSubmit = (formValues) => {
-    handleFormData("firstName")({ target: { value: formValues.firstName } });
-    handleFormData("lastName")({ target: { value: formValues.lastName } });
-    nextStep();
-  };
-
+const StepOne = ({ nextStep }) => {
   return (
     <Box mt={10} display="flex" justifyContent="center">
       <Card variant="outlined" sx={{ maxWidth: 500, p: 3 }}>
         <Typography variant="h5" mb={2}>
-          Step One
+          CPU Task Scheduling Simulator
         </Typography>
-        <Formik
-          initialValues={{
-            firstName: values.firstName || "",
-            lastName: values.lastName || "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
+        <Typography>
+          Welcome! This project is an implementation of 4 process-scheduling
+          algorithms done from the{" "}
+          <a
+            href="https://www.mbit.edu.in/wp-content/uploads/2020/05/Operating_System_Concepts_8th_EditionA4.pdf"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Operating Systems Concepts book (10th Edition) by Silberschatz et
+            al.
+          </a>{" "}
+          The four algorithms (all non-preemptive) are:
+          <List sx={{ listStyleType: "disc", marginLeft: "60px" }}>
+            <ListItem sx={{ display: "list-item" }}>
+              First-Come-First-Serve
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              Shortest Job First
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              Priority Scheduling
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              Round-Robin Scheduling
+            </ListItem>
+          </List>
+          This app allows you to interact with the task scheduling simulator by
+          selecting which algorithm you would like to test, adding in the task
+          information you want to schedule, and specifying any special
+          parameters depending on the selected algorithm. I hope you like this
+          project!
+        </Typography>
+        <Button
+          sx={{ flexDirection: "row", marginTop: "20px" }}
+          type="button"
+          variant="contained"
+          color="primary"
+          onClick={nextStep}
         >
-          {({ errors, touched }) => (
-            <Form>
-              <Box mb={2}>
-                <Field
-                  as={TextField}
-                  name="firstName"
-                  label="First Name"
-                  fullWidth
-                  error={touched.firstName && !!errors.firstName}
-                  helperText={<ErrorMessage name="firstName" />}
-                />
-              </Box>
-              <Box mb={2}>
-                <Field
-                  as={TextField}
-                  name="lastName"
-                  label="Last Name"
-                  fullWidth
-                  error={touched.lastName && !!errors.lastName}
-                  helperText={<ErrorMessage name="lastName" />}
-                />
-              </Box>
-              <Box textAlign="right">
-                <Button type="submit" variant="contained" color="primary">
-                  Continue
-                </Button>
-              </Box>
-            </Form>
-          )}
-        </Formik>
+          Get Started
+        </Button>
       </Card>
     </Box>
   );
