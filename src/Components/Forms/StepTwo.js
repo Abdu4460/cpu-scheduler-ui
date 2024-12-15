@@ -36,7 +36,7 @@ const validationSchema = Yup.object({
     .of(
       Yup.object({
         name: Yup.string().required("Task name is required"),
-        priorityLevel: Yup.number()
+        priority: Yup.number()
           .min(0, "Priority level must be 0 or higher")
           .required("Priority level is required"),
         burst: Yup.number()
@@ -63,7 +63,7 @@ const StepTwo = ({ nextStep, handleFormData, prevStep, values }) => {
 
   const taskTemplate = (index) => ({
     name: `Task ${index + 1}`,
-    priorityLevel: 0,
+    priority: 0,
     burst: 0,
     arrivalTime: 0,
   });
@@ -186,11 +186,11 @@ const StepTwo = ({ nextStep, handleFormData, prevStep, values }) => {
                     </Typography>
                     <TextField
                       sx={{ margin: "20px" }}
-                      name={`tasks[${index}].priorityLevel`}
-                      value={task.priorityLevel}
+                      name={`tasks[${index}].priority`}
+                      value={task.priority}
                       onChange={(e) =>
                         setFieldValue(
-                          `tasks[${index}].priorityLevel`,
+                          `tasks[${index}].priority`,
                           Math.max(0, e.target.value)
                         )
                       }
@@ -198,10 +198,10 @@ const StepTwo = ({ nextStep, handleFormData, prevStep, values }) => {
                       type="number"
                       fullWidth
                       error={
-                        touched.tasks?.[index]?.priorityLevel &&
-                        !!errors.tasks?.[index]?.priorityLevel
+                        touched.tasks?.[index]?.priority &&
+                        !!errors.tasks?.[index]?.priority
                       }
-                      helperText={errors.tasks?.[index]?.priorityLevel || ""}
+                      helperText={errors.tasks?.[index]?.priority || ""}
                     />
                     <TextField
                       sx={{ margin: "20px" }}

@@ -1,5 +1,5 @@
 import "./App.css";
-import { Container, Grid2, Box } from "@mui/material";
+import { Container, Grid, Box } from "@mui/material";
 import { useState } from "react";
 import StepOne from "./Components/Forms/StepOne";
 import StepTwo from "./Components/Forms/StepTwo";
@@ -38,8 +38,8 @@ function App() {
     <div className="App">
       <Container maxWidth="sm">
         <Box mt={5}>
-          <Grid2 container justifyContent="center">
-            <Grid2 item xs={12}>
+          <Grid container justifyContent="center">
+            <Grid item xs={12}>
               {step === 1 && (
                 <StepOne
                   nextStep={nextStep}
@@ -56,8 +56,8 @@ function App() {
               )}
 
               {step === 3 && <Final values={formData} />}
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </Box>
       </Container>
     </div>

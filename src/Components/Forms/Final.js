@@ -1,11 +1,25 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from 'axios';
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import axios from "axios";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  TableContainer,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
+  TableRow,
+  List,
+  ListItem,
+} from "@mui/material";
+import _ from "lodash";
 
 const Final = ({ values }) => {
   const [responseData, setResponseData] = useState({
-    "results": {},
-    "statistics": {}
+    results: [],
+    statistics: {},
   });
   const hasFetched = useRef(false); // Ref to track API call status
   const { algorithmName, priority, quantum, tasks } = values;
@@ -21,11 +35,15 @@ const Final = ({ values }) => {
 
       console.log("Sending data to API:", payload);
 
-      const response = await axios.post("http://localhost:8080/submit-tasks", payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8080/submit-tasks",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setResponseData(response.data);
       console.log("API Response:", response.data);
       alert("Data submitted successfully!");
@@ -36,7 +54,10 @@ const Final = ({ values }) => {
   };
 
   useEffect(() => {
-    sendDataToApi();
+    if (!hasFetched.current) {
+      hasFetched.current = true;
+      sendDataToApi();
+    }
   }, []);
 
   return (
@@ -44,33 +65,49 @@ const Final = ({ values }) => {
       <Card variant="outlined" sx={{ maxWidth: 500, p: 2 }}>
         <CardContent>
           <Typography variant="h5" gutterBottom>
-            Final Details
+            Task Execution Table
           </Typography>
+          {/* Tasks */}
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Task Name</TableCell>
+                  <TableCell>Priority</TableCell>
+                  <TableCell>Burst</TableCell>
+                  {algorithmName === "RR" ? (
+                    <TableCell>Quantum Duration</TableCell>
+                  ) : null}
+                  <TableCell>Time Elapsed</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {responseData.results.map((task, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{task.taskName}</TableCell>
+                    <TableCell>{task.priority}</TableCell>
+                    <TableCell>{task.burst}</TableCell>
+                    {algorithmName === "RR" ? (
+                      <TableCell>{task.duration}</TableCell>
+                    ) : null}
+                    <TableCell>{task.timeElapsed}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-          <Typography variant="body1">
-            <strong>Algorithm Name:</strong> {algorithmName}
-          </Typography>
-
-          <Typography variant="body1">
-            <strong>Priority:</strong> {priority ? "Ascending" : "Descending"}
-          </Typography>
-
-          <Typography variant="body1">
-            <strong>Quantum:</strong> {quantum}
-          </Typography>
-
-          <Typography variant="body1">
-            <strong>Tasks:</strong>
-            <ul>
-              {tasks.map((task, index) => (
-                <li key={index}>
-                  <strong>Name:</strong> {task.name}, <strong>Priority Level:</strong>{" "}
-                  {task.priorityLevel}, <strong>Burst:</strong> {task.burst},{" "}
-                  <strong>Arrival Time:</strong> {task.arrivalTime}
-                </li>
-              ))}
-            </ul>
-          </Typography>
+          <Typography sx={{ marginTop: '30px' }}>Statistics for the {algorithmName} Scheduler</Typography>
+          <List sx={{ listStyleType: "disc" }}>
+            {Object.entries(responseData.statistics).map(
+              ([key, value], index) => (
+                <ListItem key={index} style={{ display: "list-item" }}>
+                  <strong>{_.startCase(key)}</strong>:{" "}
+                  {Math.round(value * 100) / 100}ms
+                </ListItem>
+              )
+            )}
+          </List>
         </CardContent>
       </Card>
     </Box>
